@@ -19,7 +19,7 @@ const getData = (book = 0) => {
 const cartNum = (add=true) => {
     let cartNum = document.querySelector('.cart-num')
     add ? cartCount += 1 : cartCount -= 1
-    cartNum.innerText = cartCount 
+    cartNum.innerText = cartCount
 }
 
 
@@ -32,6 +32,11 @@ const addToCartButtons = () => {
         books.forEach(x => {
             if(x.asin === asin) {
                 cart.push(x)
+
+                let li = document.createElement('li')
+                li.classList.add('d-flex', 'justify-content-center', 'align-items-center')
+                li.innerHTML = `<a class="dropdown-item" href="#">${x.title}</a><button type="button" class="btn-close"></button>`
+                document.querySelector('.dropdown-menu').appendChild(li)
             }
         })
 
@@ -80,4 +85,24 @@ const generateCards = (books=books) => {
 
 window.onload = () => {
     getData()
+
+    const input = document.querySelector('input')
+    const searchButton = document.querySelector('.search')
+
+    searchButton.addEventListener('click', () => {
+        const value = input.value
+        input.value = ''
+        if(value.length > 3) {
+            document.querySelector('#card-section').innerHTML = ''
+            console.log(books.filter(x => x.title.toLowerCase().includes(value.toLowerCase())))
+            generateCards(books.filter(x => x.title.toLowerCase().includes(value.toLowerCase())))
+        }
+    })
+
+
+    const home = document.getElementById('home')
+    home.addEventListener('click', () => {
+        document.getElementById('card-section').innerHTML = ''
+        generateCards(books)
+    })
 }
